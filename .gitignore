@@ -1,4 +1,4 @@
-node_modules
+#node_modules
 test.js
 .DS_Store
-.env
+#.env"node_modules" 
