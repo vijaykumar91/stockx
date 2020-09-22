@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+ 
+
+<head>
+   
+  <title>StockX</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+  <script src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"> </script>
+<link href="  https://cdn.datatables.net/1.10.21/css/jquery.dataTables.min.css" rel="stylesheet" type="text/css" />
+<link href="https://cdn.datatables.net/buttons/1.6.2/css/buttons.dataTables.min.css" rel="stylesheet" type="text/css" />
+<link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.4.1/css/buttons.dataTables.min.css">
+<script type="text/javascript" language="javascript" src="https://cdn.datatables.net/buttons/1.4.1/js/dataTables.buttons.min.js"></script>
+<script type="text/javascript" language="javascript" src="https://cdn.datatables.net/buttons/1.4.1/js/buttons.flash.min.js"></script>
+<script type="text/javascript" language="javascript" src="https://cdn.datatables.net/buttons/1.4.1/js/buttons.html5.min.js"></script>
+<script type="text/javascript" language="javascript" src="https://cdn.datatables.net/buttons/1.4.1/js/buttons.print.min.js"></script>
+
+  <script>
+    $(document).ready( function () {
+        $('#myTable').DataTable();
+    } );
+  </script>
+</head>
+<body>
+
+
+
+<div class="container">
+  <h2>StockX</h2>
+  
+      <div class="row">
+          <form action="/inventory" method="post" id="intform">
+             <div class="col-md- pull-right"> 
+           <input type="hidden"   name="redirect1"  id="submitVal">
+         <button type="button"  class="btn btn-success"  id="Inventory">Inventory</button>  
+         <button type="button"  class="btn btn-info" id="Formula">Add Formula</button> </div>
+          
+        </div>
+     
+        </form>
+      <!-- Modal Add Product-->
+      <form action="/save" method="post">
+	  <!-- Search form -->
+	  <div class="col-md-6">
+<div class="md-form active-pink active-pink-2 mb-3 mt-0">
+   <input type="text" name="product_name" class="form-control" placeholder="Product Name" required>
+</div>
+</div>
+ <button type="submit"  class="btn btn-primary">Search</button>
+ </form>
+ <div> 
+
+ </div>
+ <hr>
+ <form action="/save1" method="post" id="pform">
+    <div class="col-md-9">
+          <button type="submit" onclick="getLoc()"  class="btn btn-primary">Add to Inventory</button>
+          <input type="hidden" name="pids"  id="pids">
+      </div>
+ </form>
+ 	  
+
+  <table class="table" id="myTable">
+    
+    <thead>
+      <tr>
+        <th>SELECT ITEM</th>
+	     <th></th>
+        <th>ITEM NAME</th>
+        <th>SIZE</th>
+        <th>LOWEST ASK </th>
+        <th>HEIGHEST BID</th>
+        <th>QTY. SOLD</th>
+        
+      </tr>
+    </thead>
+    <tbody>
+     {{#each results}}
+        <tr>
+          <td><input type="checkbox"  name="product[]" id="product_id_{{ id }}" value="{{ id }}"></td>
+		 <td><img  src="{{ imageUrl }}"   height="50" width="50"/></td>
+          <td>{{ Product_name }}</td>
+          <td>{{ size }}</td>
+		  <td style="color:green">${{ lowesAsk }}</td>
+          <td style="color:red">${{ heighestBid }}</td>
+          <td>{{ deadstockSold }}</td>
+		  
+        </tr>
+        {{/each}}
+    </tbody>
+  </table>
+</div>
+  <div class="modal" id="myModal"tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Modal title</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+          <form action="/saveFormula" method="post">  
+
+                <div class="form-group">
+                  <label for="email">--Select Product--</label>
+                  <select class="form-control" id="ProwID">
+                     {{#each results}}
+                        <option value="{{ id }}">{{ Product_name }}</option>
+                      {{/each}}
+                  </select>
+                </div>
+
+                <div class="form-group">
+                  <label for="email">Purchase Date:</label>
+                  <input type="date" class="form-control" id="date1" name="pdate" required  value="01/10/2020" placeholder="Purchase Date">
+                </div>
+                <div class="form-group">
+                  <label for="pwd">Sell Date:</label>
+                  <input type="date" class="form-control" id="saledt" required  name="sdate"  placeholder="Sell Date">
+                </div>
+
+                <div class="form-group">
+                  <label for="pwd">Cost Price:</label>
+                  <input type="text" class="form-control" id="cprice"  required name="cprice"  placeholder="Cost price">
+                </div>
+
+                <div class="form-group">
+                  <label for="pwd">Sale Price:</label>
+                  <input type="text" class="form-control" id="sprice"  required name="sprice"  placeholder="Sale price">
+                </div>
+
+                <div class="form-group">
+                  <label for="exampleFormControlSelect1">FEES</label>
+                  <select class="form-control" required name="fees" id="fees">
+                    <option value="">--Select Fees %--</option>
+                    <option value="3">3%</option>
+                    <option  value="11">11%</option>
+                    <option value="12">12%</option>
+                  </select>
+                </div>
+              </form>
+      </div>
+      <div class="modal-footer">
+        {{!-- <input type="hidden" id="ProwID" > --}}
+        <button type="button" class="btn btn-primary" onclick="saveFormula()">Save changes</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/10.2.0/sweetalert2.css" integrity="sha512-+h9ra6iu6KJZSagIStfWvrL3Gfo6N0VMvjwNl+RM1Ggs0r2Ee1c9D/AklThWh9DqOHyYpDPt0Hrli/3LNDf1xw==" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/10.2.0/sweetalert2.min.css" integrity="sha512-NU255TKQ55xzDS6UHQgO9HQ4jVWoAEGG/lh2Vme0E2ymREox7e8qwIfn6BFem8lbahhU9E2IQrHZlFAxtKWH2Q==" crossorigin="anonymous" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/10.2.0/sweetalert2.min.js" integrity="sha512-v5+P0WiX2OXNoTswvUsmvIPlUbL9aMPxDYSrQyOgsviJtLptmi95Nw1x0WvLg6S038JoY5+Eb3AZPuB4jwiz9A==" crossorigin="anonymous"></script>
+
+<script>
+
+    function saveFormula(){
+      var date1=$("#date1").val();
+      var saledt=  $("#saledt").val();
+      var cprice=  $("#cprice").val();
+      var sprice =$("#sprice").val();
+      var fees=$("#fees").val();
+      var ProwID=$("#ProwID").val();
+
+
+      
+    var data = {
+                "apitype":"editProduct",
+                "pdate":date1,
+                "saledt":saledt,
+                "cprice":cprice,
+                "sprice":sprice,
+                "fees":fees,
+                "ProwID":ProwID
+            }
+     
+    	jQuery.ajax({
+						type:'POST',
+						url: "/addProductFormula",
+						data: data,
+						success: function(response){
+					
+							if(response.status==1){
+								Swal.fire({
+                title: 'Success :)',
+                text: "Record Updated Sucessfully",
+                icon: 'success',
+                }).then((result) => {
+                if (result.value) {
+                     location.reload();
+                }
+                })
+							
+							}else{
+								Swal.fire({
+									position: 'top-end',
+									icon: 'error',
+									title: 'Report Assignment Fail',
+									showConfirmButton: false,
+									timer: 3000
+								})
+							}
+
+							
+							
+						},
+						error: function(error){
+							//console.log(error);
+							console.log("error", error.responseText);
+						}
+						});
+    
+
+  }
+ 
+    function getLoc(){
+          var checkboxes = document.getElementsByName('product[]');
+          var vals = "";
+          for (var i=0, n=checkboxes.length;i<n;i++) 
+          {
+              if (checkboxes[i].checked) 
+              {
+                  vals += ","+checkboxes[i].value;
+              }
+          }
+          if (vals) vals = vals.substring(1);
+        //console.log("vals===>>",vals)
+        
+    if(vals==''){
+        alert('Please Select Product..')
+        
+    }else{
+       $('#pids').val(vals)
+       $('#pform').submit()
+    }
+       
+    }
+
+    $('#Inventory').click(function(){
+         $('#submitVal').val('Inventory')
+          $('#intform').submit()
+    })
+
+     $('#Formula').click(function(){
+     
+         $('#myModal').modal({
+          show: 'false'
+        }); 
+         //$('#intform').submit()
+    })
+
+const queryString = window.location.href
+ if(queryString.split('/')[3]=='message'){
+	            Swal.fire({
+                title: 'Success :)',
+                text: "Product Added Sucessfully",
+                icon: 'success',
+                }).then((result) => {
+                if (result.value) {
+                     window.location.href='http://localhost:8000/'
+                }
+                })
+
+ }
+</script>
+</html>
+

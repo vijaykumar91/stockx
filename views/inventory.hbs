@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Bootstrap Example</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+  <style src="//cdn.datatables.net/1.10.21/css/jquery.dataTables.min.css"></style>
+  <script src="//cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
+
+  <script>
+    $(document).ready( function () {
+        $('#myTable').DataTable();
+    } );
+  </script>
+</head>
+<body>
+
+
+
+<div class="container">
+  <h2>StockX</h2>
+  
+      <div class="row">
+          <form action="/home" method="post" id="intform">
+         <div class="col-md- pull-right"> 
+         <button type="button"  class="btn btn-success"  id="searchProduct">Search product</button>  
+         {{!-- <button type="button"  class="btn btn-info" id="Formula">Formula</button> </div> --}}
+        <input type="hidden"   name="redirect"  id="submitVal">
+          </form>
+        </div>
+ <hr>
+
+ 	  
+  <table class="table" id="myTable">
+    
+    <thead>
+      <tr>
+        <th></th>
+        <th>ITEM</th>
+        <th>Size</th>
+        <th>Purchase Date</th>
+        <th>Sell Date</th>
+        <th>COST</th>
+        <th>LOWEST ASK</th>
+        <th>HIGHEST BID</th>
+        <th>SELL PRICE</th>
+        <th>FEES</th>
+        <th>PAYOUT</th>
+        <th>PROFIT</th>
+        <th>ROI</th>
+        <th>BRAND</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+     {{#each results}}
+        <tr>
+
+          
+	        <td><img  src="{{ imageUrl }}"   height="50"/></td>
+          <td>{{ Product_name }}</td>
+          <td>{{ size }}</td>
+          <td>{{ pdate }}</td>
+          <td>{{ sdate }}</td>
+          <td>${{ cprice }}</td>
+          <td style="color:green">${{ lowesAsk }}</td>
+          <td style="color:red">${{ heighestBid }}</td>
+          <td>${{ sprice }}</td>
+          <td>{{ fees }}%</td>
+          
+          <td>${{ payout }}</td>
+          <td>{{ profit  }}</td>
+          <td>{{ rio }}%</td>
+          <td>{{ product_category }}</td>
+          <td><a href="#" onclick="Edit('{{id}}','{{ Product_name }}','{{ size }}','{{ pdate }}','{{ sdate }}','{{ cprice }}','{{ lowesAsk }}','{{ heighestBid }}','{{ sprice }}','{{ fees }}','{{ payout }}','{{ profit }}','{{ rio }}','{{ product_category }}')">Edit</a></td>
+        </tr>
+        {{/each}}
+    </tbody>
+  </table>
+
+
+  <div class="modal" id="myModal"tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Modal title</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+          <form action="/saveFormula" method="post">  
+                <div class="form-group">
+                  <label for="email">Purchase Date:</label>
+                  <input type="date" class="form-control" id="date1" name="pdate" required  value="01/10/2020" placeholder="Purchase Date">
+                </div>
+                <div class="form-group">
+                  <label for="pwd">Sell Date:</label>
+                  <input type="date" class="form-control" id="saledt" required  name="sdate"  placeholder="Sell Date">
+                </div>
+
+                <div class="form-group">
+                  <label for="pwd">Cost Price:</label>
+                  <input type="text" class="form-control" id="cprice"  required name="cprice"  placeholder="Cost price">
+                </div>
+
+                <div class="form-group">
+                  <label for="pwd">Sale Price:</label>
+                  <input type="text" class="form-control" id="sprice"  required name="sprice"  placeholder="Sale price">
+                </div>
+
+                <div class="form-group">
+                  <label for="exampleFormControlSelect1">FEES</label>
+                  <select class="form-control" required name="fees" id="fees">
+                    <option value="">--Select Fees %--</option>
+                    <option value="3">3%</option>
+                    <option  value="11">11%</option>
+                    <option value="12">12%</option>
+                  </select>
+                </div>
+              </form>
+      </div>
+      <div class="modal-footer">
+        <input type="hidden" id="ProwID" >
+        <button type="button" class="btn btn-primary" onclick="saveFormula()">Save changes</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div>
+
+</body>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/10.2.0/sweetalert2.css" integrity="sha512-+h9ra6iu6KJZSagIStfWvrL3Gfo6N0VMvjwNl+RM1Ggs0r2Ee1c9D/AklThWh9DqOHyYpDPt0Hrli/3LNDf1xw==" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/10.2.0/sweetalert2.min.css" integrity="sha512-NU255TKQ55xzDS6UHQgO9HQ4jVWoAEGG/lh2Vme0E2ymREox7e8qwIfn6BFem8lbahhU9E2IQrHZlFAxtKWH2Q==" crossorigin="anonymous" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/10.2.0/sweetalert2.min.js" integrity="sha512-v5+P0WiX2OXNoTswvUsmvIPlUbL9aMPxDYSrQyOgsviJtLptmi95Nw1x0WvLg6S038JoY5+Eb3AZPuB4jwiz9A==" crossorigin="anonymous"></script>
+<script>
+
+  
+  function saveFormula(){
+      var date1=$("#date1").val();
+      var saledt=  $("#saledt").val();
+      var cprice=  $("#cprice").val();
+      var sprice =$("#sprice").val();
+      var fees=$("#fees").val();
+      var ProwID=$("#ProwID").val();
+
+
+      
+    var data = {
+                "apitype":"editProduct",
+                "pdate":date1,
+                "saledt":saledt,
+                "cprice":cprice,
+                "sprice":sprice,
+                "fees":fees,
+                "ProwID":ProwID
+            }
+    	jQuery.ajax({
+						type:'POST',
+						url: "/editProduct",
+						data: data,
+						success: function(response){
+							console.log("Ajax Response...",response.status);
+							if(response.status==1){
+								Swal.fire({
+                title: 'Success :)',
+                text: "Record Updated Sucessfully",
+                icon: 'success',
+                }).then((result) => {
+                if (result.value) {
+                     location.reload();
+                }
+                })
+							
+							}else{
+								Swal.fire({
+									position: 'top-end',
+									icon: 'error',
+									title: 'Report Assignment Fail',
+									showConfirmButton: false,
+									timer: 3000
+								})
+							}
+
+							
+							
+						},
+						error: function(error){
+							//console.log(error);
+							console.log("error", error.responseText);
+						}
+						});
+    
+
+  }
+  function Edit(id,Product_name ,size ,pdate ,sdate , cprice ,lowesAsk ,heighestBid ,sprice ,fees ,payout , profit ,rio ,product_category){
+   
+      pdate2=convertDate(pdate)
+      sdate1=convertDate(sdate)
+     $("#date1").val(pdate2);
+     $("#saledt").val(sdate1);
+
+     $("#cprice").val(cprice);
+     $("#sprice").val(sprice);
+     $("#fees").val(fees);
+     $("#ProwID").val(id);
+      $('#myModal').modal({
+          show: 'false'
+      }); 
+  }
+    function getLoc(){
+          var checkboxes = document.getElementsByName('product[]');
+          var vals = "";
+          for (var i=0, n=checkboxes.length;i<n;i++) 
+          {
+              if (checkboxes[i].checked) 
+              {
+                  vals += ","+checkboxes[i].value;
+              }
+          }
+          if (vals) vals = vals.substring(1);
+        //console.log("vals===>>",vals)
+        
+    if(vals==''){
+        alert('Please Select Product..')
+        
+    }else{
+       $('#pids').val(vals)
+       $('#pform').submit()
+    }
+       
+    }
+
+
+    
+    $('#searchProduct').click(function(){
+         $('#submitVal').val('searchProduct')
+          $('#intform').submit()
+    })
+
+     $('#Formula').click(function(){
+         $('#submitVal').val('Formula')
+        // $('#intform').submit()
+          $('#myModal').modal({
+            show: 'false'
+          }); 
+    })
+
+    function convertDate(inputFormat) {
+      function pad(s) { return (s < 10) ? '0' + s : s; }
+      var d = new Date(inputFormat)
+      return [d.getFullYear(), pad(d.getMonth()+1),pad(d.getDate())].join('-')
+    }
+
+</script>
+</html>
+

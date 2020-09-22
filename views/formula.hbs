@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Bootstrap Example</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+  <style src="//cdn.datatables.net/1.10.21/css/jquery.dataTables.min.css"></style>
+  <script src="//cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
+
+  <script>
+    $(document).ready( function () {
+        $('#myTable').DataTable();
+    } );
+  </script>
+</head>
+<body>
+
+
+
+<div class="container">
+  <h2>StockX</h2>
+      <div class="row">
+          <form action="/home" method="post" id="intform"></form>
+         <div class="col-md- pull-right"> 
+         <button type="button"  class="btn btn-success"  id="searchProduct">Search product</button>  
+         <button type="button"  class="btn btn-info" id="Formula">Formula</button> </div>
+        <input type="hidden"   name="redirect"  id="submitVal">
+          </form>
+        </div>
+
+      <div class="col-md-6 col-md-offset-3">
+ <form action="/saveFormula" method="post">  
+            <div class="form-group">
+              <label for="email">Purchase Date:</label>
+              <input type="date" class="form-control" id="date" name="pdate" required placeholder="Purchase Date">
+            </div>
+            <div class="form-group">
+              <label for="pwd">Sell Date:</label>
+              <input type="date" class="form-control" id="saledt" required  name="sdate"  placeholder="Sell Date">
+            </div>
+
+            <div class="form-group">
+              <label for="pwd">Cost Price:</label>
+              <input type="text" class="form-control" id="cprice"  required name="cprice"  placeholder="Cost price">
+            </div>
+
+             <div class="form-group">
+              <label for="pwd">Sale Price:</label>
+              <input type="text" class="form-control" id="sprice"  required name="sprice"  placeholder="Sale price">
+            </div>
+
+            <div class="form-group">
+              <label for="exampleFormControlSelect1">FEES</label>
+              <select class="form-control" required name="fees" id="exampleFormControlSelect1">
+                <option value="">--Select Fees %--</option>
+                <option value="3">3%</option>
+                <option  value="11">11%</option>
+                <option value="12">12%</option>
+              </select>
+            </div>
+
+
+            <button type="submit" class="btn btn-default">Submit</button>
+          </form>
+          
+
+      </div>
+         
+ <hr>
+
+ 	  
+ 
+</div>
+
+</body>
+<script>
+    function getLoc(){
+          var checkboxes = document.getElementsByName('product[]');
+          var vals = "";
+          for (var i=0, n=checkboxes.length;i<n;i++) 
+          {
+              if (checkboxes[i].checked) 
+              {
+                  vals += ","+checkboxes[i].value;
+              }
+          }
+          if (vals) vals = vals.substring(1);
+        //console.log("vals===>>",vals)
+        
+    if(vals==''){
+        alert('Please Select Product..')
+        
+    }else{
+       $('#pids').val(vals)
+       $('#pform').submit()
+    }
+       
+    }
+
+
+    
+    $('#searchProduct').click(function(){
+         $('#submitVal').val('searchProduct')
+          $('#intform').submit()
+    })
+
+     $('#Formula').click(function(){
+         $('#submitVal').val('Formula')
+         $('#intform').submit()
+    })
+</script>
+</html>
+
